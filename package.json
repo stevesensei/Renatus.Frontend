@@ -1,0 +1,37 @@
+{
+  "name": "renatus-front",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.7.0",
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "typecheck": "vue-tsc --noEmit",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "lint": "biome check src vite.config.ts package.json tsconfig.json biome.json"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.15",
+    "@types/node": "^24.19.2",
+    "@vitejs/plugin-vue": "6.0.10",
+    "typescript": "5.9.3",
+    "vite": "8.3.4",
+    "vue-tsc": "3.3.13"
+  },
+  "dependencies": {
+    "@lucide/vue": "1.55.0",
+    "@primeuix/themes": "2.0.3",
+    "dompurify": "3.4.16",
+    "ky": "2.2.0",
+    "marked": "18.1.0",
+    "primevue": "4.5.5",
+    "skin3d": "0.2.0",
+    "vue": "3.5.43",
+    "vue-router": "4.6.4",
+    "zod": "4.6.6"
+  }
+}

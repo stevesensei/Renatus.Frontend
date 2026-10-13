@@ -1,0 +1,114 @@
+.panel {
+  padding: var(--space-6);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  min-width: 0;
+}
+.panel > h2,
+.panel > .markdown {
+  margin-bottom: var(--space-4);
+}
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+.section-heading p {
+  font-size: var(--text-sm);
+  margin-top: var(--space-1);
+}
+.section-heading-copy {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6);
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  min-width: 0;
+}
+.field .p-inputtext,
+.field .p-select,
+.field .p-inputnumber,
+.field .p-textarea {
+  width: 100%;
+}
+.field .p-password-input {
+  width: 100%;
+}
+.field-label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+.span-2 {
+  grid-column: span 2;
+}
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+.inline-actions,
+.filter-cluster,
+.segmented,
+.table-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.table-actions {
+  gap: var(--space-1);
+}
+.button-link {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-sm);
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  background: var(--primary);
+  color: var(--surface);
+  font-weight: 500;
+  font-size: var(--text-sm);
+  border: 1px solid var(--primary);
+}
+.button-link:hover {
+  background: var(--primary-hover);
+}
+.button-link.secondary {
+  color: var(--ink);
+  background: var(--surface);
+  border-color: var(--line);
+}
+.button-link.secondary:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.text-link {
+  color: var(--primary);
+  font-size: var(--text-sm);
+}
+.icon-link {
+  display: inline-grid;
+  place-items: center;
+  min-height: 44px;
+  min-width: 36px;
+  color: var(--primary);
+}

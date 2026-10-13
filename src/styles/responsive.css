@@ -1,0 +1,106 @@
+@media (max-width: 1024px) {
+  .settings-grid {
+    grid-template-columns: 280px minmax(0, 1fr);
+  }
+  .selection-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .auth-page {
+    margin: var(--space-8) var(--space-4);
+  }
+  .auth-announcement,
+  .auth-form {
+    padding: var(--space-8);
+  }
+  .account-grid {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  .player-grid,
+  .texture-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .auth-page,
+  .account-grid,
+  .dashboard-grid,
+  .settings-grid,
+  .upload-grid,
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+  .auth-page {
+    min-height: auto;
+  }
+  .auth-announcement {
+    padding: var(--space-8);
+  }
+  .auth-benefits {
+    display: none;
+  }
+  .auth-announcement h1 {
+    font-size: var(--text-xl);
+  }
+  .auth-announcement .text-link {
+    margin-top: var(--space-4);
+  }
+  .profile-summary {
+    display: none;
+  }
+  .character-preview > .skin-viewer {
+    height: 340px;
+  }
+  .selection-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .quota-bar .muted {
+    display: none;
+  }
+  .markdown-editor {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 640px) {
+  .player-grid,
+  .texture-grid,
+  .home-features {
+    grid-template-columns: 1fr;
+  }
+  .home-hero {
+    min-height: 560px;
+  }
+  .home-copy {
+    padding: var(--space-12) var(--space-6);
+  }
+  .hero-caption {
+    display: none;
+  }
+  .hero-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .home-features {
+    padding: var(--space-8) var(--space-6);
+  }
+  .auth-form {
+    padding: var(--space-6);
+  }
+  .filter-cluster {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .filter-cluster .search-field {
+    flex: 1;
+    min-width: 160px;
+  }
+  .selection-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .detail-stage,
+  .large-skin-stage {
+    height: 380px;
+  }
+  .pagination {
+    gap: var(--space-3);
+  }
+}

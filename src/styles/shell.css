@@ -1,0 +1,207 @@
+.markdown {
+  color: var(--muted);
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+.markdown h1,
+.markdown h2,
+.markdown h3 {
+  color: var(--ink);
+  font-size: var(--text-lg);
+  margin: var(--space-4) 0 var(--space-3);
+}
+.markdown p,
+.markdown ul,
+.markdown ol {
+  margin: var(--space-3) 0;
+}
+.markdown a {
+  color: var(--primary);
+  text-decoration: underline;
+}
+.markdown pre {
+  padding: var(--space-4);
+  background: var(--canvas);
+  overflow: auto;
+  border-radius: var(--radius-sm);
+}
+.markdown img,
+.announcement-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+}
+.markdown table {
+  border-collapse: collapse;
+}
+.markdown th,
+.markdown td {
+  border: 1px solid var(--line);
+  padding: var(--space-2);
+}
+.admin-layout {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+}
+.admin-sidebar {
+  padding: var(--space-8) var(--space-4);
+  background: var(--surface);
+  border-right: 1px solid var(--line);
+}
+.admin-sidebar > .eyebrow {
+  padding: 0 var(--space-4);
+}
+.admin-sidebar nav {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+.admin-sidebar nav a {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+}
+.admin-sidebar nav a.selected {
+  color: var(--primary);
+  background: var(--soft);
+  font-weight: 600;
+}
+.admin-sidebar nav a:hover {
+  color: var(--primary);
+}
+.nav-number {
+  font-size: var(--text-xs);
+  opacity: 0.7;
+}
+.sidebar-back {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  color: var(--muted);
+  font-size: var(--text-sm);
+  padding: var(--space-4);
+  margin-top: var(--space-8);
+}
+.app-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--space-8);
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: var(--text-xs);
+}
+.empty-state {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-4);
+  padding: var(--space-16) var(--space-6);
+  color: var(--muted);
+  text-align: center;
+}
+.empty-state h2 {
+  color: var(--ink);
+}
+@media (max-width: 1024px) {
+  .desktop-nav {
+    display: none;
+  }
+  .menu-toggle.p-button {
+    display: inline-flex;
+  }
+  .metrics-grid.four {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+  .admin-sidebar {
+    padding: var(--space-3) var(--space-4);
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .admin-sidebar > .eyebrow,
+  .sidebar-back {
+    display: none;
+  }
+  .admin-sidebar nav {
+    display: flex;
+    overflow: auto;
+    margin: 0;
+  }
+  .admin-sidebar nav a {
+    flex-shrink: 0;
+  }
+}
+@media (max-width: 640px) {
+  .app-header {
+    padding: var(--space-3) var(--space-4);
+    gap: var(--space-3);
+    min-height: 68px;
+  }
+  .account-link span:not(.p-avatar) {
+    display: none;
+  }
+  .header-actions {
+    gap: var(--space-1);
+  }
+  .brand {
+    font-size: var(--text-lg);
+  }
+  .brand-mark {
+    width: 32px;
+    height: 32px;
+  }
+  .page-content {
+    padding: var(--space-8) var(--space-4);
+  }
+  .page-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .page-heading h1 {
+    font-size: var(--text-xl);
+  }
+  .form-grid,
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  .span-2 {
+    grid-column: auto;
+  }
+  .panel {
+    padding: var(--space-4);
+  }
+  .section-heading {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .metrics-grid.four {
+    gap: var(--space-3);
+  }
+  .metrics-grid.four .metric-card {
+    padding: var(--space-4);
+    flex-direction: column;
+  }
+  .app-footer {
+    padding: var(--space-6) var(--space-4);
+    flex-direction: column;
+  }
+}
+/* Reduced-motion settings must override component transitions and inline styles. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    /* biome-ignore lint/complexity/noImportantStyles: honor reduced-motion over library styles. */
+    scroll-behavior: auto !important;
+    /* biome-ignore lint/complexity/noImportantStyles: honor reduced-motion over library styles. */
+    transition-duration: 0s !important;
+    /* biome-ignore lint/complexity/noImportantStyles: honor reduced-motion over library styles. */
+    animation-duration: 0s !important;
+  }
+}

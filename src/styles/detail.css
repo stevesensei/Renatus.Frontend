@@ -1,0 +1,123 @@
+.upload-grid,
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+.detail-grid {
+  grid-template-columns: 1.5fr 1fr;
+}
+.upload-dropzone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-8);
+  border: 1px dashed var(--primary);
+  border-radius: var(--radius);
+  background: var(--soft);
+  color: var(--primary);
+  text-align: center;
+}
+.upload-dropzone span {
+  font-size: var(--text-xs);
+  color: var(--muted);
+}
+.visibility-row,
+.viewer-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+.visibility-row {
+  padding: var(--space-4) 0;
+}
+.large-skin-stage,
+.detail-stage {
+  height: 440px;
+  background: var(--stage);
+  border-radius: var(--radius);
+}
+.detail-stage {
+  height: 480px;
+  margin: var(--space-3) 0;
+}
+.animation-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+.animation-buttons .p-button {
+  min-width: 60px;
+}
+.texture-detail-title {
+  margin: var(--space-4) 0;
+}
+.metadata {
+  margin: 0;
+}
+.metadata > div {
+  display: grid;
+  grid-template-columns: 100px minmax(0, 1fr);
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--line);
+  font-size: var(--text-sm);
+}
+.metadata dt {
+  color: var(--muted);
+}
+.metadata dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.texture-description {
+  margin: var(--space-6) 0;
+}
+.texture-description h3 {
+  font-size: var(--text-base);
+}
+.markdown-editor {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-6);
+}
+.markdown-editor.single {
+  grid-template-columns: 1fr;
+}
+.markdown-preview {
+  background: var(--canvas);
+  border-radius: var(--radius-sm);
+  padding: var(--space-4);
+}
+.button-editor {
+  border-top: 1px solid var(--line);
+  padding-top: var(--space-6);
+}
+.button-editor h3 {
+  margin-bottom: var(--space-4);
+  font-size: var(--text-base);
+}
+.error-page {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  text-align: center;
+}
+.error-icon {
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  border-radius: var(--radius-lg);
+  background: var(--error-soft);
+  color: var(--danger);
+}

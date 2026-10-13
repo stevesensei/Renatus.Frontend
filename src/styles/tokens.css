@@ -1,0 +1,58 @@
+:root {
+  font-family: Inter, system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  color-scheme: light;
+  --canvas: #f4f6f8;
+  --surface: #fff;
+  --ink: #172033;
+  --muted: #667085;
+  --line: #e4e7ec;
+  --soft: #eeeafe;
+  --secondary: #00a6a6;
+  --primary: #5b4be7;
+  --primary-hover: #4c3bcd;
+  --hero-ink: #fff;
+  --hero-button-ink: #172033;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 20px;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --page-width: 1280px;
+  --sidebar-width: 232px;
+  --shadow: 0 8px 28px rgb(23 32 51 / 6%);
+  --stage: radial-gradient(ellipse at 50% 35%, #eeebff 0, #eef4f8 65%, #e5eaf0 100%);
+  --stage-line: rgb(91 75 231 / 6%);
+  --hero-shade: linear-gradient(90deg, rgb(10 16 30 / 82%), rgb(10 16 30 / 25%));
+  --error-soft: #fff1ed;
+  --danger: #bd3c27;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+:root.dark {
+  color-scheme: dark;
+  --canvas: #11131c;
+  --surface: #1b1e2a;
+  --ink: #f3f4f8;
+  --muted: #adb4c5;
+  --line: #303545;
+  --soft: #29243f;
+  --primary: #b5a3fa;
+  --primary-hover: #d4c8ff;
+  --stage: radial-gradient(ellipse at 50% 35%, #302847 0, #202636 65%, #1b1e2a 100%);
+  --stage-line: rgb(181 163 250 / 6%);
+  --error-soft: #392822;
+  --danger: #ffab91;
+}
