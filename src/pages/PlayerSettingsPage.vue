@@ -24,7 +24,7 @@ async function save():Promise<void>{
 
 </script>
 <template>
-  <PageHeading eyebrow="角色装扮" :title="player?.name ?? '角色未找到'" description="从你的材质和收藏中，挑选下一套装扮。"><RouterLink to="/players" class="button-link secondary"><ArrowLeft :size="18" />返回角色</RouterLink></PageHeading>
+  <PageHeading eyebrow="角色装扮" :title="player?.name ?? '角色未找到'" description="皮肤披风随便选"><RouterLink to="/players" class="button-link secondary"><ArrowLeft :size="18" />返回角色</RouterLink></PageHeading>
   <Message v-if="!player" severity="error">{{ operation.pending.value ? '正在加载角色…' : operation.error.value || '此角色不存在，请从角色列表重新选择。' }}</Message>
   <div v-else class="settings-grid">
     <section class="panel character-preview">
@@ -42,7 +42,7 @@ async function save():Promise<void>{
         </div>
       </section>
       <section class="panel">
-        <div class="section-heading"><div><h2>披风</h2><p class="muted">为你的旅途留下一个印记</p></div><Button text label="清除选择" severity="secondary" @click="capeId = null" /></div>
+        <div class="section-heading"><div><h2>披风</h2><p class="muted">超级地球捐赠</p></div><Button text label="清除选择" severity="secondary" @click="capeId = null" /></div>
         <div class="selection-grid">
           <button type="button" :class="['selection-card', 'empty-choice', { selected: capeId === null }]" :aria-pressed="capeId === null" @click="capeId = null"><X :size="28" /><span>不使用披风</span></button>
           <button v-for="texture in capes" :key="texture.id" type="button" :class="['selection-card', { selected: capeId === texture.id }]" :aria-pressed="capeId === texture.id" @click="capeId = capeId === texture.id ? null : texture.id">

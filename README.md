@@ -48,3 +48,7 @@ API 客户端同时处理 GlobalResponse 业务码、401/403、模型验证 400 
 父项目以 `Renatus.Front` 路径登记子模块，远程为 `git@github.com:stevesensei/Renatus.Frontend.git`。克隆时使用 `git clone --recurse-submodules`。更新前端后先在子仓库提交并推送，再在父仓库更新 gitlink；父仓库只记录子仓库提交 ID。
 
 开发设计规则见 DESIGN.md。历史 Blazor 耦合分析与本次 API 清单见 MIGRATION_TEMP.md。没有执行全面视觉/无障碍验收，也没有向实际业务数据库执行破坏性联调。
+
+## 页脚配置
+
+管理员在 `/admin/site` 的“页脚信息”中填写版权信息（最多 500 字符）和 ICP 备案号（最多 80 字符），保存后所有页面的页脚同步显示。空值隐藏。字段为 `copyright`、`icpRegistrationNumber`，经站点管理 API 保存到现有 `AppConfigurations` 表的 Site JSON，并通过 `/api/site/config` 返回；无需数据库结构迁移。

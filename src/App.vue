@@ -39,6 +39,6 @@ onMounted(() => operation.run(loadSite));
   <Message v-if="operation.error.value" severity="error">{{ operation.error.value }}<Button text label="重新加载" @click="operation.run(loadSite)" /></Message>
   <div :class="['app-layout',{'admin-layout':admin}]"><aside v-if="admin" class="admin-sidebar"><span class="eyebrow">管理面板</span><nav aria-label="管理导航"><RouterLink v-for="(page,index) in adminPages" :key="page.path" :to="page.path" :class="{selected:route.path===page.path}"><span class="nav-number">0{{index+1}}</span>{{page.title}}</RouterLink></nav><RouterLink class="sidebar-back" to="/dashboard"><ArrowLeft :size="16" />返回控制台</RouterLink></aside>
   <main id="main-content" :class="['page-content',{'full-page':route.path==='/'||route.path==='/login'}]"><RouterView /></main></div>
-  <footer class="app-footer"><span>{{ state.site.title }} · 让每一次冒险，都属于你。</span><RouterLink to="/textures">探索材质库</RouterLink></footer>
+  <footer class="app-footer"><div class="footer-info"><span>{{ state.site.title }} · 让每一次冒险，都属于你。</span><span v-if="state.site.copyright">{{ state.site.copyright }}</span><span v-if="state.site.icpRegistrationNumber">{{ state.site.icpRegistrationNumber }}</span></div><RouterLink to="/textures">探索材质库</RouterLink></footer>
   <Toast position="bottom-right" />
 </template>

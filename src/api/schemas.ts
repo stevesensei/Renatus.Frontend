@@ -48,6 +48,8 @@ export const siteSchema = z.object({
   description: z.string(),
   heroImage: z.string(),
   buttons: z.array(buttonSchema),
+  copyright: z.string().default(''),
+  icpRegistrationNumber: z.string().default(''),
   apiBaseUrl: z.string(),
   loginAnnouncement: announcementSchema,
   siteAnnouncement: announcementSchema,
@@ -58,6 +60,8 @@ export const adminSiteSchema = z.object({
   heroImage: z.string(),
   publicBaseUrl: z.string(),
   buttons: z.array(buttonSchema),
+  copyright: z.string().default(''),
+  icpRegistrationNumber: z.string().default(''),
 });
 export const authSchema = z.object({
   accessToken: z.string(),

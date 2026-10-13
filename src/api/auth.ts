@@ -24,6 +24,8 @@ export async function loadSite(): Promise<void> {
     heroImage: site.heroImage,
     publicBaseUrl: site.apiBaseUrl,
     buttons: site.buttons,
+    copyright: site.copyright,
+    icpRegistrationNumber: site.icpRegistrationNumber,
   };
   state.announcements = { login: site.loginAnnouncement, site: site.siteAnnouncement };
 }

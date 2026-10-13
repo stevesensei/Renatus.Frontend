@@ -18,7 +18,15 @@ export const state = reactive<AppState>({
   textures: [],
   users: [],
   maxPlayers: 0,
-  site: { title: 'Renatus', description: '', heroImage: '', publicBaseUrl: '', buttons: [] },
+  site: {
+    title: 'Renatus',
+    description: '',
+    heroImage: '',
+    publicBaseUrl: '',
+    buttons: [],
+    copyright: '',
+    icpRegistrationNumber: '',
+  },
   announcements: { login: { title: '', body: '', image: '' }, site: { title: '', body: '', image: '' } },
 });
 export function resetPrivateState(): void {
