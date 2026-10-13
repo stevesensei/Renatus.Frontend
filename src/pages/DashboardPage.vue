@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { t } from '../i18n';
 import {ArrowRight, Brush, Globe, LockKeyhole, Users} from '@lucide/vue';
 import {computed, onMounted} from 'vue';
 import {RouterLink} from 'vue-router';
@@ -15,36 +16,34 @@ onMounted(() => operation.run(loadUserResources));
 
 </script>
 <template>
-  <PageHeading eyebrow="仪表盘" :title="'来啦老弟，' + state.account.nickname" description="查看你的材质与角色">
+  <PageHeading :eyebrow="t('dashboard.eyebrow')" :title="t('dashboard.welcomePrefix') + state.account.nickname" :description="t('dashboard.description')">
     <RouterLink to="/players" class="button-link secondary">
-      <Users :size="18"/>
-      我的角色
-    </RouterLink>
+      <Users :size="18"/>{{ t('nav.myPlayers') }}</RouterLink>
   </PageHeading>
   <div class="metrics-grid">
-    <MetricCard label="我的材质" :value="owned.length" :icon="Brush" detail="你的全部皮肤与披风"/>
-    <MetricCard label="公开材质" :value="owned.filter(t => t.isPublic).length" :icon="Globe" detail="其他人也可以使用"/>
-    <MetricCard label="私人材质" :value="owned.filter(t => !t.isPublic).length" :icon="LockKeyhole"
-                detail="只有你自己可用"/>
+    <MetricCard :label="t('dashboard.myTextures')" :value="owned.length" :icon="Brush" :detail="t('dashboard.allTexturesDescription')"/>
+    <MetricCard :label="t('textures.publicCollection')" :value="owned.filter(t => t.isPublic).length" :icon="Globe" :detail="t('dashboard.publicTexturesDescription')"/>
+    <MetricCard :label="t('dashboard.privateTextures')" :value="owned.filter(t => !t.isPublic).length" :icon="LockKeyhole"
+                :detail="t('dashboard.privateTexturesDescription')"/>
   </div>
   <div class="dashboard-grid">
     <section class="panel announcement-panel">
-      <p class="eyebrow">社区公告</p>
+      <p class="eyebrow">{{ t('dashboard.communityAnnouncement') }}</p>
       <h2>{{state.announcements.site.title}}</h2>
       <MarkdownContent :content="state.announcements.site.body"/>
       <img v-if="state.announcements.site.image" class="announcement-image" :src="state.announcements.site.image"
-           alt="站点公告"/>
+           :alt="t('dashboard.siteAnnouncement')"/>
     </section>
-    <section class="panel"><p class="eyebrow">接下来</p>
-      <h2>我觉得你可以做</h2>
+    <section class="panel"><p class="eyebrow">{{ t('dashboard.next') }}</p>
+      <h2>{{ t('dashboard.suggestions') }}</h2>
       <div class="quick-links">
-        <RouterLink to="/textures"><span><strong>瞅一眼材质库</strong><small>找到新的皮肤与披风</small></span>
+        <RouterLink to="/textures"><span><strong>{{ t('dashboard.explore') }}</strong><small>{{ t('dashboard.exploreDescription') }}</small></span>
           <ArrowRight :size="20"/>
         </RouterLink>
-        <RouterLink to="/textures/upload"><span><strong>分享你的大作（大嘘）</strong><small>上传并预览材质</small></span>
+        <RouterLink to="/textures/upload"><span><strong>{{ t('dashboard.share') }}</strong><small>{{ t('dashboard.shareDescription') }}</small></span>
           <ArrowRight :size="20"/>
         </RouterLink>
-        <RouterLink to="/account"><span><strong>完善个人资料</strong><small>我超，盒不动</small></span>
+        <RouterLink to="/account"><span><strong>{{ t('dashboard.profile') }}</strong><small>{{ t('dashboard.profileDescription') }}</small></span>
           <ArrowRight :size="20"/>
         </RouterLink>
       </div>

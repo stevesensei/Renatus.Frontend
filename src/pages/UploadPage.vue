@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { t } from '../i18n';
 import {ArrowLeft, Upload} from '@lucide/vue';
 import {computed, reactive, ref, shallowRef, watch} from 'vue';
 import {RouterLink, useRouter} from 'vue-router';
@@ -17,7 +18,7 @@ const router = useRouter();
 const form = reactive<Pick<TexturePreview, 'name' | 'type' | 'source' | 'model' | 'description'>>({
   name: '',
   type: 'skin',
-  source: '原创',
+  source: 'original',
   model: 'default',
   description: ''
 });
@@ -63,73 +64,68 @@ async function publish(): Promise<void> {
         name: form.name,
         type: {skin: 0, cape: 1}[form.type],
         skinModel: {default: 0, slim: 1}[form.model],
-        source: {原创: 0, 转载: 1}[form.source],
+        source: {original: 0, repost: 1}[form.source],
         descriptionMarkdown: form.description,
         isPublic: !privateTexture.value,
         dataBase64: selected.image
       }
     });
     await router.push({path: '/texture/preview', query: {id: texture.id}});
-  }, '材质已上传');
+  }, t('upload.published'));
 }
 
 </script>
 <template>
-  <PageHeading eyebrow="分享你的创作" title="上传材质" description="上传你的皮肤或披风，先瞅瞅长啥样。">
+  <PageHeading :eyebrow="t('upload.eyebrow')" :title="t('nav.uploadTexture')" :description="t('upload.description')">
     <RouterLink to="/textures" class="button-link secondary">
-      <ArrowLeft :size="18"/>
-      返回材质库
-    </RouterLink>
+      <ArrowLeft :size="18"/>{{ t('nav.backToTextures') }}</RouterLink>
   </PageHeading>
   <div class="upload-grid">
     <form class="panel form-stack" @submit.prevent="publish">
-      <div><h2>材质信息</h2>
-        <p class="muted">看着不孬</p></div>
-      <label class="field">材质名称
-        <InputText v-model="form.name" required maxlength="80" placeholder="起个名呗"/>
+      <div><h2>{{ t('textureDetails.information') }}</h2>
+        <p class="muted">{{ t('upload.informationDescription') }}</p></div>
+      <label class="field">{{ t('common.textureName') }}<InputText v-model="form.name" required maxlength="80" :placeholder="t('upload.namePlaceholder')"/>
       </label>
-      <div class="form-grid"><label class="field">材质类型<Select v-model="form.type"
-                                                                  :options="[{label:'皮肤',value:'skin'},{label:'披风',value:'cape'}]"
+      <div class="form-grid"><label class="field">{{ t('common.textureType') }}<Select v-model="form.type"
+                                                                  :options="[{label:t('common.skin'),value:'skin'},{label:t('common.cape'),value:'cape'}]"
                                                                   option-label="label"
-                                                                  option-value="value"/></label><label class="field">来源<Select
-          v-model="form.source" :options="['原创','转载']"/></label></div>
-      <label v-if="form.type === 'skin'" class="field">皮肤模型<Select v-model="form.model"
-                                                                       :options="[{label:'默认模型',value:'default'},{label:'细手臂',value:'slim'}]"
+                                                                  option-value="value"/></label><label class="field">{{ t('common.source') }}<Select
+          v-model="form.source" :options="[{label:t('common.original'),value:'original'},{label:t('common.repost'),value:'repost'}]" option-label="label" option-value="value"/></label></div>
+      <label v-if="form.type === 'skin'" class="field">{{ t('common.skinModel') }}<Select v-model="form.model"
+                                                                       :options="[{label:t('common.defaultModel'),value:'default'},{label:t('common.slimModel'),value:'slim'}]"
                                                                        option-label="label"
                                                                        option-value="value"/></label>
-      <div class="field"><label for="texture-description">材质说明</label>
+      <div class="field"><label for="texture-description">{{ t('common.textureDescription') }}</label>
         <div class="inline-actions">
-          <Button type="button" size="small" :text="markdownPreview" label="编辑" @click="markdownPreview = false"/>
-          <Button type="button" size="small" :text="!markdownPreview" label="预览" @click="markdownPreview = true"/>
+          <Button type="button" size="small" :text="markdownPreview" :label="t('common.edit')" @click="markdownPreview = false"/>
+          <Button type="button" size="small" :text="!markdownPreview" :label="t('common.preview')" @click="markdownPreview = true"/>
         </div>
-        <MarkdownContent v-if="markdownPreview" :content="form.description || '暂无说明。'"/>
+        <MarkdownContent v-if="markdownPreview" :content="form.description || t('upload.emptyDescription')"/>
         <Textarea v-else id="texture-description" v-model="form.description" rows="5" maxlength="4000"
-                  placeholder="随便写点啥，支持 Markdown。"/><span class="muted small">{{form.description.length}} / 4000</span>
+                  :placeholder="t('upload.descriptionPlaceholder')"/><span class="muted small">{{ t('upload.descriptionCount', { value1: form.description.length }) }}</span>
       </div>
       <label class="upload-dropzone">
         <Upload :size="28"/>
-        <strong>{{
-            file?.name ?? '选择或拖入 PNG 文件'
-          }}</strong><span>最大 2 MiB · {{form.type === 'skin' ? '64n × 32n / 64n × 64n' : '64n × 32n'}}</span><input
+        <strong>{{ file?.name ?? t('upload.chooseFile') }}</strong><span>{{ t('upload.fileHint', { value1: form.type === 'skin' ? t('upload.skinDimensionsHint') : t('upload.capeDimensionsHint') }) }}</span><input
           type="file" accept=".png,image/png" required @change="selectFile"/></label>
       <Message v-if="error" severity="error">{{error}}</Message>
       <div class="visibility-row">
-        <div><label for="private-texture">设为私人材质</label>
-          <p class="muted small">公开材质会展示在社区材质库中。</p></div>
+        <div><label for="private-texture">{{ t('upload.private') }}</label>
+          <p class="muted small">{{ t('upload.publicHint') }}</p></div>
         <ToggleSwitch v-model="privateTexture" input-id="private-texture"/>
       </div>
       <Button type="submit" :loading="operation.pending.value" :disabled="image === null || !form.name.trim()"
-              label="发布材质"/>
+              :label="t('upload.publish')"/>
     </form>
     <section class="panel upload-preview">
-      <div class="section-heading"><h2>实时预览</h2>
-        <Tag value="3D" severity="secondary"/>
+      <div class="section-heading"><h2>{{ t('upload.livePreview') }}</h2>
+        <Tag :value="t('common.threeDimensional')" severity="secondary"/>
       </div>
       <div class="large-skin-stage">
         <SkinViewer :skin="skin" :cape="form.type === 'cape' ? image?.image ?? null : null"
                     :model="form.type === 'cape' ? 'default' : form.model" :animation="animation"/>
       </div>
-      <p class="muted small center">拖动旋转 · 滚轮缩放</p>
+      <p class="muted small center">{{ t('viewer.controlsHint') }}</p>
       <div class="animation-buttons">
         <Button v-for="item in animationOptions" :key="String(item.value)" :label="item.label" size="small"
                 :outlined="animation !== item.value" @click="animation = item.value"/>

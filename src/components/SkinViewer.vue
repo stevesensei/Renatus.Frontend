@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { t } from '../i18n';
 import {
   CrouchAnimation, FlyingAnimation, HitAnimation, IdleAnimation, Render,
   RunningAnimation, WalkingAnimation, WaveAnimation,
@@ -58,7 +59,7 @@ async function textures(): Promise<void> {
     current.render();
   } catch (cause) {
     if (destroyed) return;
-    if (cause instanceof Error) error.value = '无法显示 3D 预览，请检查图片或浏览器 WebGL 支持。';
+    if (cause instanceof Error) error.value = t('viewer.loadFailed');
     else throw cause;
   } finally {
     if (!destroyed && revision === textureRevision) loading.value = false;
@@ -77,7 +78,7 @@ onMounted(async () => {
     await textures();
     if (!destroyed) animate();
   } catch (cause) {
-    if (cause instanceof Error) { error.value = '此浏览器暂时无法创建 3D 预览。'; loading.value = false; }
+    if (cause instanceof Error) { error.value = t('viewer.unsupported'); loading.value = false; }
     else throw cause;
   }
 });
@@ -87,8 +88,8 @@ onBeforeUnmount(() => { destroyed = true; observer?.disconnect(); viewer?.dispos
 </script>
 <template>
   <div ref="container" class="skin-viewer">
-    <canvas ref="canvas" role="img" aria-label="Minecraft 角色三维预览，可在详情页拖动旋转"></canvas>
-    <p v-if="loading" class="viewer-state" role="status">正在载入模型…</p>
+    <canvas ref="canvas" role="img" :aria-label="t('viewer.description')"></canvas>
+    <p v-if="loading" class="viewer-state" role="status">{{ t('viewer.loading') }}</p>
     <p v-if="error" class="viewer-state" role="alert">{{ error }}</p>
   </div>
 </template>

@@ -1,6 +1,7 @@
 import type { Options } from 'ky';
 import ky, { HTTPError, NetworkError, TimeoutError } from 'ky';
 import { z } from 'zod';
+import { t } from '../i18n';
 import { clearSession, session } from './session';
 
 const transport = ky.create({ timeout: 20000, retry: 0 });
@@ -38,13 +39,12 @@ export async function api<T>(
             .join(' ') || details.data.title
         : '';
       throw new ApiError(
-        message || (cause.response.status === 403 ? '你没有权限执行此操作。' : '请求失败，请稍后重试。'),
+        message || (cause.response.status === 403 ? t('errors.forbidden') : t('errors.requestFailed')),
         cause.response.status,
       );
     }
-    if (cause instanceof TimeoutError || cause instanceof NetworkError)
-      throw new ApiError('无法连接服务，请检查网络后重试。');
-    if (cause instanceof z.ZodError) throw new ApiError('服务返回的数据格式无效，请联系管理员。');
+    if (cause instanceof TimeoutError || cause instanceof NetworkError) throw new ApiError(t('errors.network'));
+    if (cause instanceof z.ZodError) throw new ApiError(t('errors.invalidResponse'));
     throw cause;
   }
 }

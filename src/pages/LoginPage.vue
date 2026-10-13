@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { t } from '../i18n';
 import {Brush, ShieldCheck, Users} from '@lucide/vue';
 import {computed, onBeforeUnmount, reactive, ref} from 'vue';
 import {RouterLink, useRoute, useRouter} from 'vue-router';
@@ -28,7 +29,7 @@ async function sendCode(): Promise<void> {
       countdown.value = Math.max(0, Math.ceil((until - Date.now()) / 1000));
       if (!countdown.value) clearInterval(timer);
     }, 1000);
-  }, '验证码已发送，请检查邮箱。');
+  }, t('login.codeSent'));
 }
 
 async function submit(): Promise<void> {
@@ -52,63 +53,51 @@ onBeforeUnmount(() => clearInterval(timer));
 </script>
 <template>
   <div class="auth-page">
-    <section class="auth-announcement"><p class="eyebrow">WELCOME TO RENATUS</p>
-      <h1>{{state.announcements.login.title || '欢迎来到 Renatus'}}</h1>
+    <section class="auth-announcement"><p class="eyebrow">{{ t('login.welcomeEyebrow') }}</p>
+      <h1>{{ state.announcements.login.title || t('login.welcome') }}</h1>
       <MarkdownContent :content="state.announcements.login.body"/>
-      <img v-if="state.announcements.login.image" :src="state.announcements.login.image" alt="登录公告"
+      <img v-if="state.announcements.login.image" :src="state.announcements.login.image" :alt="t('login.announcement')"
            class="announcement-image"/>
       <div class="auth-benefits">
         <p>
-          <ShieldCheck :size="20"/>
-          安全的账户认证，硬度超过基岩！
-        </p>
+          <ShieldCheck :size="20"/>{{ t('login.authBenefit') }}</p>
         <p>
-          <Users :size="20"/>
-          管理你的角色，管了又管
-        </p>
+          <Users :size="20"/>{{ t('login.playersBenefit') }}</p>
         <p>
-          <Brush :size="20"/>
-          皮肤披风管够哈老弟
-        </p>
+          <Brush :size="20"/>{{ t('login.texturesBenefit') }}</p>
       </div>
-      <RouterLink to="/" class="text-link">返回首页</RouterLink>
+      <RouterLink to="/" class="text-link">{{ t('nav.backToHome') }}</RouterLink>
     </section>
-    <section class="auth-form"><p class="eyebrow">{{register ? 'JOIN THE COMMUNITY' : 'WELCOME BACK'}}</p>
-      <h2>{{register ? '创建你的阿康特(塑料英语说是)' : '欢迎回来(滴蜡熊音)'}}</h2>
-      <p class="muted">{{register ? '来了老弟？' : '回来了老弟？'}}</p>
+    <section class="auth-form"><p class="eyebrow">{{register ? t('login.registerEyebrow') : t('login.signInEyebrow')}}</p>
+      <h2>{{ register ? t('login.registerTitle') : t('login.signInTitle') }}</h2>
+      <p class="muted">{{ register ? t('login.registerDescription') : t('login.signInDescription') }}</p>
       <div class="auth-tabs">
-        <RouterLink to="/login" :class="{selected:!register}">登录</RouterLink>
-        <RouterLink to="/login?mode=register" :class="{selected:register}">注册</RouterLink>
+        <RouterLink to="/login" :class="{selected:!register}">{{ t('login.signIn') }}</RouterLink>
+        <RouterLink to="/login?mode=register" :class="{selected:register}">{{ t('login.register') }}</RouterLink>
       </div>
       <form class="form-stack" @submit.prevent="submit">
-        <template v-if="register"><label class="field">用户名
-          <InputText v-model="form.username" required maxlength="64" autocomplete="username"/>
-        </label><label class="field">邮箱
-          <InputText v-model="form.email" required type="email" autocomplete="email"/>
+        <template v-if="register"><label class="field">{{ t('common.username') }}<InputText v-model="form.username" required maxlength="64" autocomplete="username"/>
+        </label><label class="field">{{ t('common.email') }}<InputText v-model="form.email" required type="email" autocomplete="email"/>
         </label>
-          <div class="code-row"><label class="field">验证码
-            <InputText v-model="form.code" required pattern="[0-9]{6}" maxlength="6" inputmode="numeric"/>
+          <div class="code-row"><label class="field">{{ t('login.code') }}<InputText v-model="form.code" required pattern="[0-9]{6}" maxlength="6" inputmode="numeric"/>
           </label>
             <Button type="button" outlined :loading="sending.pending.value" :disabled="!form.email||countdown>0"
-                    :label="countdown>0?String(countdown)+' 秒后重发':'获取验证码'" @click="sendCode"/>
+                    :label="countdown>0?t('login.resendDelay', {seconds:countdown}):t('login.requestCode')" @click="sendCode"/>
           </div>
-          <label class="field">昵称
-            <InputText v-model="form.nickname" maxlength="64"/>
+          <label class="field">{{ t('common.nickname') }}<InputText v-model="form.nickname" maxlength="64"/>
           </label></template>
-        <label v-else class="field">用户名或邮箱
-          <InputText v-model="form.login" required autocomplete="username"/>
-        </label><label class="field">密码
-        <Password v-model="form.password" :feedback="register" toggle-mask
+        <label v-else class="field">{{ t('login.identifier') }}<InputText v-model="form.login" required autocomplete="username"/>
+        </label><label class="field">{{ t('login.password') }}<Password v-model="form.password" :feedback="register" toggle-mask
                   :input-props="{required:true,autocomplete:register?'new-password':'current-password',maxlength:128}"
                   fluid/>
       </label>
         <Message v-if="operation.error.value" severity="error">{{operation.error.value}}</Message>
         <Message v-if="sending.error.value" severity="error">{{sending.error.value}}</Message>
-        <Button type="submit" :loading="operation.pending.value" :label="register?'创建账户':'登录账户'"
+        <Button type="submit" :loading="operation.pending.value" :label="register?t('login.createAccount'):t('login.signInAction')"
                 class="w-full"/>
       </form>
-      <p class="auth-form-footer">{{register ? '已经有账户？' : '还没有账户？'}}
-        <RouterLink :to="register?'/login':'/login?mode=register'">{{register ? '去登录' : '立即注册'}}</RouterLink>
+      <p class="auth-form-footer">{{ register ? t('login.hasAccount') : t('login.noAccount') }}
+        <RouterLink :to="register?'/login':'/login?mode=register'">{{ register ? t('login.goToSignIn') : t('login.registerNow') }}</RouterLink>
       </p>
     </section>
   </div>

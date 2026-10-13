@@ -32,3 +32,5 @@ mixed：Panel边框，轻微阴影只用于材质卡片/菜单/弹窗；hero使�
 目标AA：可见 focus、语义标题、表单 label、44px 触摸目标、图片 alt、canvas 文字说明、空/失败状态。所有原页面已迁移；首页为 /，/home 保留别名，临时索引已移除。未执行全面视觉或无障碍验收。
 
 页脚使用站点配置中的 copyright 和 icpRegistrationNumber，空值隐藏；沿用现有文字样式和间距，长文本允许换行。
+
+界面文案统一读取 src/locales/zh_CN.json，保持现有措辞与布局；动态句子使用参数占位符。当前语言固定为简体中文，PrimeVue 默认提示和无障碍标签也由该资源提供。API 业务内容保留原值。

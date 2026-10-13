@@ -114,8 +114,9 @@ code {
   width: 40px;
   height: 40px;
   border-radius: var(--radius);
-  background: var(--primary);
+  background: transparent;
   color: var(--surface);
+  object-fit: contain;
 }
 .desktop-nav,
 .header-actions,

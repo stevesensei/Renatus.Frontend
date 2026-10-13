@@ -12,7 +12,7 @@ export const kind = z
   .transform((value) => (({ 0: 'skin', 1: 'cape' }) as const)[value]);
 export const source = z
   .union([z.literal(0), z.literal(1)])
-  .transform((value) => (({ 0: '原创', 1: '转载' }) as const)[value]);
+  .transform((value) => (({ 0: 'original', 1: 'repost' }) as const)[value]);
 export const accountSchema = z
   .object({
     id,

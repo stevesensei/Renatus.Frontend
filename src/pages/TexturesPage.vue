@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { t } from '../i18n';
 import {Brush, Plus, Search} from '@lucide/vue';
 import {computed, onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import {RouterLink, useRouter} from 'vue-router';
@@ -83,41 +84,39 @@ onBeforeUnmount(() => {
 
 </script>
 <template>
-  <PageHeading eyebrow="找到下一套装扮" title="材质库" description="探索皮肤与披风，收藏你喜欢的创作。">
+  <PageHeading :eyebrow="t('textures.eyebrow')" :title="t('nav.textures')" :description="t('textures.description')">
     <RouterLink to="/textures/upload" class="button-link">
-      <Plus :size="18"/>
-      上传材质
-    </RouterLink>
+      <Plus :size="18"/>{{ t('nav.uploadTexture') }}</RouterLink>
   </PageHeading>
   <div class="library-toolbar">
     <div class="segmented">
-      <Button :outlined="collection !== 'public'" label="公开材质" @click="collection = 'public'; page = 1"/>
-      <Button :outlined="collection !== 'favorites'" label="我的收藏"
+      <Button :outlined="collection !== 'public'" :label="t('textures.publicCollection')" @click="collection = 'public'; page = 1"/>
+      <Button :outlined="collection !== 'favorites'" :label="t('textures.favoriteCollection')"
               @click="session.token ? collection = 'favorites' : router.push({path:'/login',query:{returnUrl:'/textures'}})"/>
     </div>
     <div class="filter-cluster"><span class="search-field"><Search :size="17"/><InputText v-model="search"
-                                                                                          aria-label="搜索材质"
-                                                                                          placeholder="搜索材质或作者"/></span><Select
+                                                                                          :aria-label="t('textures.searchLabel')"
+                                                                                          :placeholder="t('textures.searchPlaceholder')"/></span><Select
         v-model="kind"
-        :options="[{ label: '全部类型', value: 'all' }, { label: '皮肤', value: 'skin' }, { label: '披风', value: 'cape' }]"
-        option-label="label" option-value="value" aria-label="材质类型"/></div>
+        :options="[{ label: t('common.allTypes'), value: 'all' }, { label: t('common.skin'), value: 'skin' }, { label: t('common.cape'), value: 'cape' }]"
+        option-label="label" option-value="value" :aria-label="t('common.textureType')"/></div>
   </div>
-  <p class="result-count muted">{{filtered.length}} 份材质，瞅着还不少嘞</p>
+  <p class="result-count muted">{{ t('textures.resultCount', { value1: filtered.length }) }}</p>
   <Message v-if="operation.error.value" severity="error">{{operation.error.value}}</Message>
-  <Message v-else-if="operation.pending.value" severity="info">正在加载材质…</Message>
+  <Message v-else-if="operation.pending.value" severity="info">{{ t('textures.loading') }}</Message>
   <div v-else-if="items.length" class="texture-grid">
     <TextureCard v-for="texture in items" :key="texture.id" :texture="texture"/>
   </div>
   <section v-else class="panel empty-state">
     <Brush :size="44"/>
-    <h2>暂时没有找到材质</h2>
-    <p class="muted">试试其他关键词，真找不着就自己个上传呗。</p>
-    <Button outlined label="清除筛选" @click="search = ''; kind = 'all'"/>
+    <h2>{{ t('textures.emptyTitle') }}</h2>
+    <p class="muted">{{ t('textures.emptyDescription') }}</p>
+    <Button outlined :label="t('textures.clearFilters')" @click="search = ''; kind = 'all'"/>
   </section>
   <div class="pagination">
-    <Button outlined severity="secondary" label="上一页" :disabled="currentPage <= 1" @click="page = currentPage - 1"/>
-    <span>第 {{currentPage}} / {{total}} 页</span>
-    <Button outlined severity="secondary" label="下一页" :disabled="currentPage >= total"
+    <Button outlined severity="secondary" :label="t('common.previousPage')" :disabled="currentPage <= 1" @click="page = currentPage - 1"/>
+    <span>{{ t('textures.pagination', { currentPage: currentPage, total: total }) }}</span>
+    <Button outlined severity="secondary" :label="t('common.nextPage')" :disabled="currentPage >= total"
             @click="page = currentPage + 1"/>
   </div>
 </template>

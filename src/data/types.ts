@@ -8,7 +8,7 @@ export interface TexturePreview {
   name: string;
   type: TextureKind;
   model: SkinModel;
-  source: '原创' | '转载';
+  source: 'original' | 'repost';
   author: string;
   uploaderId: string | null;
   isPublic: boolean;

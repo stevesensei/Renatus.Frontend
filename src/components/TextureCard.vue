@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { t } from '../i18n';
 import { ArrowUpRight, Heart } from '@lucide/vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { api } from '../api/client';
@@ -17,7 +18,7 @@ async function toggleFavorite(texture:TexturePreview):Promise<void>{
 </script>
 <template>
   <article class="texture-card">
-    <div class="texture-visual"><SkinViewer :skin="texture.type === 'skin' ? texture.image : undefined" :cape="texture.type === 'cape' ? texture.image : null" :model="texture.model" :interactive="false" /><Tag class="texture-kind" :value="texture.type === 'skin' ? '皮肤' : '披风'" severity="secondary" /><Button class="favorite-button" rounded severity="secondary" :aria-label="texture.isFavorited ? '取消收藏' : '收藏材质'" :aria-pressed="texture.isFavorited" :disabled="texture.owned || operation.pending.value" :title="texture.owned ? '上传者的材质自动收藏' : undefined" @click="toggleFavorite(texture)"><Heart :size="17" :fill="texture.isFavorited ? 'currentColor' : 'none'" /></Button></div>
-    <div class="texture-caption"><RouterLink :to="{ path: '/texture/preview', query: { id: texture.id } }"><h2>{{ texture.name }}</h2><ArrowUpRight :size="17" /></RouterLink><p class="muted">{{ texture.author }}<span>{{ texture.model === 'slim' ? '细手臂' : '默认模型' }}</span></p></div>
+    <div class="texture-visual"><SkinViewer :skin="texture.type === 'skin' ? texture.image : undefined" :cape="texture.type === 'cape' ? texture.image : null" :model="texture.model" :interactive="false" /><Tag class="texture-kind" :value="texture.type === 'skin' ? t('common.skin') : t('common.cape')" severity="secondary" /><Button class="favorite-button" rounded severity="secondary" :aria-label="texture.isFavorited ? t('textures.unfavorite') : t('textures.favoriteMaterial')" :aria-pressed="texture.isFavorited" :disabled="texture.owned || operation.pending.value" :title="texture.owned ? t('textures.ownerFavorite') : undefined" @click="toggleFavorite(texture)"><Heart :size="17" :fill="texture.isFavorited ? 'currentColor' : 'none'" /></Button></div>
+    <div class="texture-caption"><RouterLink :to="{ path: '/texture/preview', query: { id: texture.id } }"><h2>{{ texture.name }}</h2><ArrowUpRight :size="17" /></RouterLink><p class="muted">{{ texture.author }}<span>{{ texture.model === 'slim' ? t('common.slimModel') : t('common.defaultModel') }}</span></p></div>
   </article>
 </template>

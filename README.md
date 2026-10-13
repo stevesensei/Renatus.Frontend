@@ -52,3 +52,17 @@ API 客户端同时处理 GlobalResponse 业务码、401/403、模型验证 400 
 ## 页脚配置
 
 管理员在 `/admin/site` 的“页脚信息”中填写版权信息（最多 500 字符）和 ICP 备案号（最多 80 字符），保存后所有页面的页脚同步显示。空值隐藏。字段为 `copyright`、`icpRegistrationNumber`，经站点管理 API 保存到现有 `AppConfigurations` 表的 Site JSON，并通过 `/api/site/config` 返回；无需数据库结构迁移。
+
+## 简单本地化
+
+前端固定使用简体中文。界面文案集中在 `src/locales/zh_CN.json`：`messages` 包含页面、导航、表单、提示、无障碍标签和 HTML 元信息；`primevue` 包含组件内置文案。站点配置、用户信息、公告正文、材质名称等 API 内容仍按原值展示。
+
+组件及 TypeScript 模块通过统一函数读取资源，资源键受 TypeScript 检查：
+
+```ts
+import { t } from '../i18n';
+t('common.cancel');
+t('textures.pagination', { currentPage: 2, total: 5 });
+```
+
+带参数的句子在 JSON 中写为 `第 {currentPage} / {total} 页`。新增文案时先添加资源键，再调用 `t()`；不要把显示文字当作角色、来源等业务值。材质来源使用 `original`/`repost` 内部标识，调用 API 时仍转换成原来的数值枚举。HTML 标题、描述和禁用 JavaScript 提示由 Vite 从同一份资源生成。

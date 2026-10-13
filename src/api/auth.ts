@@ -1,4 +1,5 @@
 import { state } from '../data/state';
+import { t } from '../i18n';
 import { ApiError, api } from './client';
 import { accountSchema, authSchema, sessionKeySchema, siteSchema } from './schemas';
 import { clearSession, session, setSession } from './session';
@@ -32,7 +33,7 @@ export async function loadSite(): Promise<void> {
 export async function encryptPassword(
   password: string,
 ): Promise<{ readonly sessionKeyId: string; readonly encryptedPassword: string }> {
-  if (!isSecureContext) throw new ApiError('请通过 HTTPS 访问站点，以安全提交密码。');
+  if (!isSecureContext) throw new ApiError(t('auth.httpsRequired'));
   const response = await api('auth/session-key', sessionKeySchema, { method: 'post' });
   const pem = response.publicKey.replace(/-----[^-]+-----/g, '').replace(/\s/g, '');
   const key = await crypto.subtle.importKey(
@@ -53,7 +54,7 @@ export async function encryptPassword(
       encryptedPassword: btoa(String.fromCharCode(...new Uint8Array(encrypted))),
     };
   } catch (cause) {
-    if (cause instanceof Error) throw new ApiError('密码加密失败，请检查密码长度后重试。');
+    if (cause instanceof Error) throw new ApiError(t('auth.encryptionFailed'));
     throw cause;
   }
 }
