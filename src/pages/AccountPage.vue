@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { t } from '../i18n';
 import {Camera, ShieldCheck} from '@lucide/vue';
-import {reactive, ref} from 'vue';
+import {computed, reactive, ref} from 'vue';
 import { RouterLink } from 'vue-router';
 import PageHeading from '../components/PageHeading.vue';
+import EmailVerificationDialog from '../components/EmailVerificationDialog.vue';
 import {PreviewImageError, readAvatar} from '../data/images';
 import {state} from '../data/state';
 import {api, emptyResponse, ApiError} from '../api/client';
@@ -15,6 +16,8 @@ const profile = reactive({...state.account});
 const password = reactive({current: '', next: '', confirm: ''});
 const error = operation.error;
 const avatarError = ref('');
+const emailVerification = ref(false);
+const emailChanged = computed(() => profile.email.trim().toUpperCase() !== state.account.email.trim().toUpperCase());
 
 async function uploadAvatar(event: Event): Promise<void> {
   if (!(event.target instanceof HTMLInputElement)) return;
@@ -29,6 +32,10 @@ async function uploadAvatar(event: Event): Promise<void> {
 }
 
 async function save(): Promise<void> {
+  if (emailChanged.value || !state.account.emailVerifiedAt) {
+    emailVerification.value = true;
+    return;
+  }
   await operation.run(async () => {
     state.account = await api('account', accountSchema, {
       method: 'put',
@@ -84,6 +91,13 @@ async function changePassword(): Promise<void> {
         </label><label class="field">{{ t('common.nickname') }}<InputText v-model="profile.nickname" required maxlength="64"/>
         </label><label class="field span-2">{{ t('common.email') }}<InputText v-model="profile.email" required type="email" maxlength="256"/>
         </label></div>
+        <div class="inline-actions">
+          <Tag v-if="!emailChanged && state.account.emailVerifiedAt" severity="success" :value="t('emailVerification.verifiedStatus')"/>
+          <template v-else>
+            <span class="muted small">{{ t(emailChanged ? 'emailVerification.emailChanged' : 'emailVerification.pendingStatus') }}</span>
+            <Button type="submit" text :disabled="operation.pending.value" :label="t('emailVerification.verify')"/>
+          </template>
+        </div>
         <div class="form-actions">
           <Button type="submit" :loading="operation.pending.value" :disabled="operation.pending.value"
                   :label="t('account.saveProfile')"/>
@@ -108,4 +122,5 @@ async function changePassword(): Promise<void> {
       </form>
     </div>
   </div>
+  <EmailVerificationDialog v-model:visible="emailVerification" :profile="profile" @verified="Object.assign(profile, $event)"/>
 </template>

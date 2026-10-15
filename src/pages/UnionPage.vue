@@ -1,94 +1,49 @@
 <script setup lang="ts">
-import { Copy, Link2, RefreshCw, ShieldCheck, Unlink } from '@lucide/vue';
-import { computed, onMounted, reactive, ref } from 'vue';
+import { RefreshCw, ShieldCheck } from '@lucide/vue';
+import { computed, onMounted, ref } from 'vue';
 import type { z } from 'zod';
-import {
-  bindUnionProfile,
-  createBindToken,
-  loadUnionDirectory,
-  loadUnionProfiles,
-  loadUnionSecurity,
-  remapUnionProfile,
-  type unionProfileSchema,
-  unbindUnionProfile,
-} from '../api/union';
+import { loadUnionDirectory, loadUnionProfiles, loadUnionSecurity, type unionDirectorySchema, type unionProfileSchema } from '../api/union';
 import PageHeading from '../components/PageHeading.vue';
+import UnionProfileCard from '../components/UnionProfileCard.vue';
 import { useOperation } from '../composables/operation';
 import { t } from '../i18n';
 
-type UnionProfile = z.infer<typeof unionProfileSchema>;
-type ProfileDraft = { token: string; targetMinecraftUuid: string };
-
 const operation = useOperation();
-const profiles = ref<UnionProfile[]>([]);
-const servers = ref<ReadonlyArray<Record<string, unknown>>>([]);
-const securityLevel = ref<string>('');
-const drafts = reactive<Record<string, ProfileDraft>>({});
+const profiles = ref<z.infer<typeof unionProfileSchema>[]>([]);
+const servers = ref<z.infer<typeof unionDirectorySchema>['servers']>([]);
+const securityLevel = ref<string | null>(null);
+const loaded = ref(false);
+const partialLoad = ref(false);
+const securityLabel = computed(() => securityLevel.value === null ? t('common.unknown') : `SL${securityLevel.value.replace(/^SL/i, '')}`);
+const levels = [
+  { code: 'SL3', severity: 'success', label: t('union.securitySl3') },
+  { code: 'SL1', severity: 'warn', label: t('union.securitySl1') },
+  { code: 'SL0', severity: 'danger', label: t('union.securitySl0') },
+] as const;
+const securitySeverity = computed(() => levels.find(level => level.code === securityLabel.value)?.severity ?? 'secondary');
 
-const hasProfiles = computed(() => profiles.value.length > 0);
-
-function textField(item: Record<string, unknown>, ...names: readonly string[]): string {
-  for (const name of names) {
-    const value = item[name];
-    if (typeof value === 'string' || typeof value === 'number') return String(value);
-  }
-  return '';
+function stationText(server: Record<string, unknown>, key: string): string {
+  const value = server[key];
+  return typeof value === 'string' ? value : '';
 }
 
-function draftFor(playerId: string): ProfileDraft {
-  const existing = drafts[playerId];
-  if (existing) return existing;
-  const created = reactive<ProfileDraft>({ token: '', targetMinecraftUuid: '' });
-  drafts[playerId] = created;
-  return created;
+function stationUrl(server: Record<string, unknown>): string {
+  const url = URL.parse(stationText(server, 'bs_root'));
+  return url?.protocol === 'https:' || url?.protocol === 'http:' ? url.href : '';
 }
 
 async function load(): Promise<void> {
   await operation.run(async () => {
-    const [profileResult, directoryResult, securityResult] = await Promise.all([
-      loadUnionProfiles(),
-      loadUnionDirectory(),
-      loadUnionSecurity(),
+    const [profileResult, directoryResult, securityResult] = await Promise.allSettled([
+      loadUnionProfiles(), loadUnionDirectory(), loadUnionSecurity(),
     ]);
-    profiles.value = profileResult.profiles;
-    servers.value = directoryResult.servers;
-    securityLevel.value = String(securityResult.level);
+    if (profileResult.status === 'rejected') throw profileResult.reason;
+    profiles.value = profileResult.value.profiles;
+    servers.value = directoryResult.status === 'fulfilled' ? directoryResult.value.servers : [];
+    securityLevel.value = securityResult.status === 'fulfilled' ? String(securityResult.value.level) : null;
+    partialLoad.value = directoryResult.status === 'rejected' || securityResult.status === 'rejected';
+    loaded.value = true;
   });
-}
-
-async function generateToken(profile: UnionProfile): Promise<void> {
-  await operation.run(async () => {
-    draftFor(profile.playerId).token = (await createBindToken(profile.playerId)).token;
-  }, t('union.tokenCreated'));
-}
-
-async function bind(profile: UnionProfile): Promise<void> {
-  const draft = draftFor(profile.playerId);
-  await operation.run(async () => {
-    await bindUnionProfile(profile.playerId, draft.token);
-    draft.token = '';
-    await load();
-  }, t('union.bound'));
-}
-
-async function unbind(profile: UnionProfile): Promise<void> {
-  await operation.run(async () => {
-    await unbindUnionProfile(profile.playerId);
-    await load();
-  }, t('union.unbound'));
-}
-
-async function remap(profile: UnionProfile): Promise<void> {
-  const draft = draftFor(profile.playerId);
-  await operation.run(async () => {
-    await remapUnionProfile(profile.playerId, draft.targetMinecraftUuid);
-    draft.targetMinecraftUuid = '';
-    await load();
-  }, t('union.remapped'));
-}
-
-async function copyToken(token: string): Promise<void> {
-  await navigator.clipboard.writeText(token);
 }
 
 onMounted(load);
@@ -96,51 +51,44 @@ onMounted(load);
 
 <template>
   <PageHeading :eyebrow="t('union.eyebrow')" :title="t('union.title')" :description="t('union.description')">
-    <Button outlined :loading="operation.pending.value" @click="load"><RefreshCw :size="17" />{{ t('common.reload') }}</Button>
+    <Button outlined :loading="operation.pending.value" :disabled="operation.pending.value" @click="load"><RefreshCw :size="17" />{{ t('common.reload') }}</Button>
   </PageHeading>
-  <Message v-if="operation.error.value" severity="error">{{ operation.error.value }}</Message>
-  <section class="panel union-status-strip">
-    <div><ShieldCheck :size="20" /><span>{{ t('union.securityLevel') }}</span><strong>{{ securityLevel || t('common.unknown') }}</strong></div>
-    <span class="muted">{{ t('union.securityHint') }}</span>
-  </section>
-  <section class="form-stack">
-    <div class="section-heading"><div><h2>{{ t('union.profiles') }}</h2><p class="muted">{{ t('union.profilesHint') }}</p></div></div>
-    <div v-if="hasProfiles" class="form-stack">
-      <article v-for="profile in profiles" :key="profile.playerId" class="panel form-stack">
-        <div class="section-heading">
-          <div><h3>{{ profile.name }}</h3><p class="mono muted">{{ profile.minecraftUuid }}</p></div>
-          <Tag :value="profile.detail ? t('union.connected') : t('union.notConnected')" :severity="profile.detail ? 'success' : 'secondary'" />
-        </div>
-        <Message v-if="profile.conflicts.length" severity="warn">{{ t('union.conflicts', { count: profile.conflicts.length }) }}</Message>
-        <div class="form-grid">
-          <label class="field span-2">{{ t('union.bindToken') }}
-            <div class="inline-actions"><InputText v-model="draftFor(profile.playerId).token" autocomplete="off" maxlength="512" />
-              <Button type="button" outlined :aria-label="t('common.copy')" :disabled="!draftFor(profile.playerId).token" @click="copyToken(draftFor(profile.playerId).token)"><Copy :size="17" /></Button>
-            </div>
-          </label>
-          <div class="inline-actions span-2">
-            <Button outlined @click="generateToken(profile)"><Link2 :size="17" />{{ t('union.createToken') }}</Button>
-            <Button :disabled="!draftFor(profile.playerId).token" @click="bind(profile)">{{ t('union.bind') }}</Button>
-            <Button outlined severity="danger" @click="unbind(profile)"><Unlink :size="17" />{{ t('union.unbind') }}</Button>
+  <div class="form-stack">
+    <Message v-if="operation.error.value" severity="error">{{ operation.error.value }}</Message>
+    <div class="union-intro-grid">
+      <section class="panel form-stack union-guide">
+        <h2>{{ t('union.guideTitle') }}</h2>
+        <p>{{ t('union.guideNames') }}</p><p>{{ t('union.guideBinding') }}</p>
+        <p class="muted">{{ t('union.guideRules') }}</p>
+      </section>
+      <aside class="panel form-stack union-notice">
+        <h2>{{ t('union.noticeTitle') }}</h2>
+        <p>{{ t('union.noticeOwnership') }}</p><p>{{ t('union.noticeUuid') }}</p>
+        <p class="muted small">{{ t('union.noticeRemap') }}</p>
+      </aside>
+    </div>
+    <section class="panel union-security">
+      <div class="union-security-current"><ShieldCheck :size="24" /><div><h2>{{ t('union.securityLevel') }}</h2><p class="muted small">{{ t('union.securityHint') }}</p></div><Tag :value="securityLabel" :severity="securitySeverity" /></div>
+      <ul class="union-security-legend"><li v-for="level in levels" :key="level.code"><Tag :value="level.code" :severity="level.severity" /><span>{{ level.label }}</span></li></ul>
+    </section>
+    <Message v-if="partialLoad" severity="warn">{{ t('union.partialLoad') }}</Message>
+    <section class="form-stack" :aria-busy="operation.pending.value">
+      <div class="section-heading"><div><h2>{{ t('union.profiles') }}</h2><p class="muted">{{ t('union.profilesHint') }}</p></div></div>
+      <p v-if="!loaded && operation.pending.value" role="status" class="muted">{{ t('union.loading') }}</p>
+      <UnionProfileCard v-for="profile in profiles" :key="profile.playerId" :profile="profile" :servers="servers" @changed="load" />
+      <section v-if="loaded && !profiles.length" class="panel empty-state"><h3>{{ t('union.noProfiles') }}</h3><p class="muted">{{ t('union.noProfilesHint') }}</p></section>
+    </section>
+    <section class="form-stack">
+      <div class="section-heading"><div><h2>{{ t('union.directory') }}</h2><p class="muted">{{ t('union.directoryHint') }}</p></div></div>
+      <div v-if="servers.length" class="collection-grid">
+        <article v-for="(server, index) in servers" :key="stationText(server, 'code') || index" class="panel union-directory-card">
+          <Tag :value="stationText(server, 'code') || t('common.unknown')" severity="secondary" />
+          <div><h3>{{ stationText(server, 'name') || stationText(server, 'code') || t('union.unnamedServer') }}</h3>
+            <a v-if="stationUrl(server)" class="text-link" :href="stationUrl(server)" target="_blank" rel="noreferrer">{{ stationText(server, 'bs_root') }}</a>
           </div>
-          <label class="field span-2">{{ t('union.targetUuid') }}
-            <InputText v-model="draftFor(profile.playerId).targetMinecraftUuid" maxlength="36" :placeholder="t('union.targetUuidHint')" />
-          </label>
-          <div class="form-actions span-2"><Button outlined :disabled="!draftFor(profile.playerId).targetMinecraftUuid" @click="remap(profile)">{{ t('union.remap') }}</Button></div>
-        </div>
-      </article>
-    </div>
-    <section v-else class="panel empty-state"><h3>{{ t('union.noProfiles') }}</h3><p class="muted">{{ t('union.noProfilesHint') }}</p></section>
-  </section>
-  <section class="form-stack union-directory">
-    <div class="section-heading"><div><h2>{{ t('union.directory') }}</h2><p class="muted">{{ t('union.directoryHint') }}</p></div></div>
-    <div v-if="servers.length" class="collection-grid">
-      <article v-for="(server, index) in servers" :key="textField(server, 'code') || index" class="panel">
-        <h3>{{ textField(server, 'name', 'title', 'code') || t('union.unnamedServer') }}</h3>
-        <p class="muted">{{ textField(server, 'code') }}</p>
-        <a v-if="textField(server, 'bs_root', 'url')" class="text-link" :href="textField(server, 'bs_root', 'url')" target="_blank" rel="noreferrer">{{ textField(server, 'bs_root', 'url') }}</a>
-      </article>
-    </div>
-    <section v-else class="panel empty-state"><p class="muted">{{ t('union.noServers') }}</p></section>
-  </section>
+        </article>
+      </div>
+      <section v-else-if="loaded" class="panel empty-state"><p class="muted">{{ t('union.noServers') }}</p></section>
+    </section>
+  </div>
 </template>

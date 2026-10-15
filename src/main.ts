@@ -15,6 +15,7 @@ import './styles/landing.css';
 import './styles/account.css';
 import './styles/collections.css';
 import './styles/detail.css';
+import './styles/union.css';
 import './styles/responsive.css';
 
 const app = createApp(App);

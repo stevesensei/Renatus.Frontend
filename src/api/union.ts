@@ -4,12 +4,29 @@ import { id } from './schemas';
 
 const centerObject = z.object({}).catchall(z.unknown());
 
+export const unionMemberProfileSchema = z.object({
+  internal_id: z.union([z.string(), z.number()]).optional(),
+  name: z.string().nullish(),
+  bind_mapped_name: z.string().nullish(),
+  mapped_name: z.string().nullish(),
+  uuid: z.string().nullish(),
+  mapped_uuid: z.string().nullish(),
+  backend: z.string().nullish(),
+  backend_name: z.string().nullish(),
+  backend_scopes: z.object({ self: z.string().nullish() }).nullish(),
+  bind_status: z.number().int().nullish(),
+});
+
+const unionProfileDetailSchema = unionMemberProfileSchema.extend({
+  bind: z.array(unionMemberProfileSchema).default([]),
+});
+
 export const unionProfileSchema = z.object({
   playerId: id,
   minecraftUuid: id,
   name: z.string(),
-  detail: centerObject.nullish(),
-  conflicts: z.array(centerObject),
+  detail: unionProfileDetailSchema.nullish(),
+  conflicts: z.array(unionMemberProfileSchema),
 });
 
 export const unionProfilesSchema = z.object({ profiles: z.array(unionProfileSchema) });

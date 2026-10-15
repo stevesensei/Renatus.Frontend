@@ -5,7 +5,7 @@ import { state } from './data/state';
 import { t } from './i18n';
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  scrollBehavior: () => ({ top: 0 }),
+  scrollBehavior: (to) => (to.hash ? { el: to.hash } : { top: 0 }),
   routes: [
     { path: '/', alias: '/home', component: () => import('./pages/HomePage.vue'), meta: { title: t('nav.home') } },
     { path: '/login', component: () => import('./pages/LoginPage.vue'), meta: { title: t('app.signInOrRegister') } },
@@ -22,8 +22,7 @@ export const router = createRouter({
     { path: '/union', component: () => import('./pages/UnionPage.vue'), meta: { title: t('union.title'), auth: true } },
     {
       path: '/launcher',
-      component: () => import('./pages/LauncherPage.vue'),
-      meta: { title: t('launcher.title'), auth: true },
+      redirect: '/dashboard#launcher',
     },
     {
       path: '/authorizations',

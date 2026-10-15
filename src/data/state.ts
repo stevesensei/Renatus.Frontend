@@ -14,7 +14,7 @@ interface AppState {
   announcements: { login: z.infer<typeof announcementSchema>; site: z.infer<typeof announcementSchema> };
 }
 export const state = reactive<AppState>({
-  account: { id: '', username: '', nickname: '', email: '', avatar: '', role: 'Player' },
+  account: { id: '', username: '', nickname: '', email: '', emailVerifiedAt: null, avatar: '', role: 'Player' },
   players: [],
   textures: [],
   users: [],
@@ -31,7 +31,7 @@ export const state = reactive<AppState>({
   announcements: { login: { title: '', body: '', image: '' }, site: { title: '', body: '', image: '' } },
 });
 export function resetPrivateState(): void {
-  state.account = { id: '', username: '', nickname: '', email: '', avatar: '', role: 'Player' };
+  state.account = { id: '', username: '', nickname: '', email: '', emailVerifiedAt: null, avatar: '', role: 'Player' };
   state.players = [];
   state.textures = [];
   state.users = [];
