@@ -138,6 +138,25 @@
   justify-content: space-between;
   flex-wrap: wrap;
 }
+.union-directory-card > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.union-station-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: var(--space-12);
+  height: var(--space-12);
+  border-radius: var(--radius-sm);
+  background: var(--soft);
+  color: var(--primary);
+}
+.union-station-icon img {
+  width: var(--space-8);
+  height: var(--space-8);
+  object-fit: contain;
+}
 .union-token-create p {
   flex: 1;
   min-width: 220px;

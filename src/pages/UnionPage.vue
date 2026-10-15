@@ -4,6 +4,7 @@ import { computed, onMounted, ref } from 'vue';
 import type { z } from 'zod';
 import { loadUnionDirectory, loadUnionProfiles, loadUnionSecurity, type unionDirectorySchema, type unionProfileSchema } from '../api/union';
 import PageHeading from '../components/PageHeading.vue';
+import UnionDirectoryCard from '../components/UnionDirectoryCard.vue';
 import UnionProfileCard from '../components/UnionProfileCard.vue';
 import { useOperation } from '../composables/operation';
 import { t } from '../i18n';
@@ -25,11 +26,6 @@ const securitySeverity = computed(() => levels.find(level => level.code === secu
 function stationText(server: Record<string, unknown>, key: string): string {
   const value = server[key];
   return typeof value === 'string' ? value : '';
-}
-
-function stationUrl(server: Record<string, unknown>): string {
-  const url = URL.parse(stationText(server, 'bs_root'));
-  return url?.protocol === 'https:' || url?.protocol === 'http:' ? url.href : '';
 }
 
 async function load(): Promise<void> {
@@ -81,12 +77,8 @@ onMounted(load);
     <section class="form-stack">
       <div class="section-heading"><div><h2>{{ t('union.directory') }}</h2><p class="muted">{{ t('union.directoryHint') }}</p></div></div>
       <div v-if="servers.length" class="collection-grid">
-        <article v-for="(server, index) in servers" :key="stationText(server, 'code') || index" class="panel union-directory-card">
-          <Tag :value="stationText(server, 'code') || t('common.unknown')" severity="secondary" />
-          <div><h3>{{ stationText(server, 'name') || stationText(server, 'code') || t('union.unnamedServer') }}</h3>
-            <a v-if="stationUrl(server)" class="text-link" :href="stationUrl(server)" target="_blank" rel="noreferrer">{{ stationText(server, 'bs_root') }}</a>
-          </div>
-        </article>
+        <UnionDirectoryCard v-for="(server, index) in servers" :key="stationText(server, 'code') || index"
+          :code="stationText(server, 'code') || t('union.unnamedServer')" :root-url="stationText(server, 'bs_root')" />
       </div>
       <section v-else-if="loaded" class="panel empty-state"><p class="muted">{{ t('union.noServers') }}</p></section>
     </section>
