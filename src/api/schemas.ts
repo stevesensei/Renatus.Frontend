@@ -19,6 +19,7 @@ export const accountSchema = z
     username: z.string(),
     nickName: z.string(),
     email: z.string(),
+    emailVerifiedAt: z.string().nullish(),
     avatarBase64: z.string().nullish(),
     role,
   })
@@ -27,6 +28,7 @@ export const accountSchema = z
     username: user.username,
     nickname: user.nickName,
     email: user.email,
+    emailVerifiedAt: user.emailVerifiedAt ?? null,
     avatar: user.avatarBase64 ?? '',
     role: user.role,
   }));

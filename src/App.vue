@@ -7,18 +7,20 @@ import {loadSite, logout} from './api/auth';
 import {session} from './api/session';
 import {useOperation} from './composables/operation';
 import {state} from './data/state';
+import EmailVerificationDialog from './components/EmailVerificationDialog.vue';
 
 const route = useRoute();
 const router = useRouter();
 const logoUrl = import.meta.env.BASE_URL + 'logo.png';
 const dark = ref(false);
 const menu = ref(false);
+const emailVerification = ref(false);
 const operation = useOperation();
 const admin = computed(() => route.path.startsWith('/admin'));
 const authenticated = computed(() => Boolean(session.token && state.account.id));
 const navigation = computed(() => [
   {path: '/', label: t('nav.home')}, {path: '/textures', label: t('nav.textures')},
-  ...(authenticated.value ? [{path: '/dashboard', label: t('nav.dashboard')}, {path: '/players', label: t('nav.myPlayers')}] : []),
+  ...(authenticated.value ? [{path: '/dashboard', label: t('nav.dashboard')}, {path: '/players', label: t('nav.myPlayers')}, {path: '/union', label: t('nav.union')}] : []),
   ...(authenticated.value && state.account.role === 'Admin' ? [{path: '/admin', label: t('nav.admin')}] : []),
 ]);
 const adminPages = [{path: '/admin', title: t('nav.communityOverview')}, {
@@ -27,7 +29,7 @@ const adminPages = [{path: '/admin', title: t('nav.communityOverview')}, {
 }, {path: '/admin/players', title: t('nav.adminPlayers')}, {path: '/admin/textures', title: t('nav.adminTextures')}, {
   path: '/admin/site',
   title: t('nav.siteSettings')
-}, {path: '/admin/announcements', title: t('nav.announcements')}];
+}, {path: '/admin/announcements', title: t('nav.announcements')}, {path: '/admin/union', title: t('nav.adminUnion')}, {path: '/admin/connect', title: t('nav.adminConnect')}, {path: '/admin/activity', title: t('nav.adminActivity')}];
 
 function toggleTheme(): void {
   dark.value = !dark.value;
@@ -88,6 +90,11 @@ onMounted(() => operation.run(loadSite));
   <Message v-if="operation.error.value" severity="error">{{operation.error.value}}
     <Button text :label="t('common.reload')" @click="operation.run(loadSite)"/>
   </Message>
+  <Message v-if="authenticated && !state.account.emailVerifiedAt" severity="warn" class="email-verification-banner">
+    <div class="inline-actions"><span>{{ t('emailVerification.banner') }}</span>
+      <Button size="small" :label="t('emailVerification.verify')" @click="emailVerification = true"/>
+    </div>
+  </Message>
   <div :class="['app-layout',{'admin-layout':admin}]">
     <aside v-if="admin" class="admin-sidebar"><span class="eyebrow">{{ t('nav.admin') }}</span>
       <nav :aria-label="t('app.adminNavigation')">
@@ -110,4 +117,5 @@ onMounted(() => operation.run(loadSite));
     <RouterLink to="/textures">{{ t('nav.exploreTextures') }}</RouterLink>
   </footer>
   <Toast position="bottom-right"/>
+  <EmailVerificationDialog v-if="authenticated" v-model:visible="emailVerification" :profile="state.account"/>
 </template>

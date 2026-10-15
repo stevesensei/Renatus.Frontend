@@ -4,6 +4,7 @@ import {ArrowRight, Brush, Globe, LockKeyhole, Users} from '@lucide/vue';
 import {computed, onMounted} from 'vue';
 import {RouterLink} from 'vue-router';
 import MarkdownContent from '../components/MarkdownContent.vue';
+import LauncherSetup from '../components/LauncherSetup.vue';
 import MetricCard from '../components/MetricCard.vue';
 import PageHeading from '../components/PageHeading.vue';
 import {state} from '../data/state';
@@ -49,4 +50,5 @@ onMounted(() => operation.run(loadUserResources));
       </div>
     </section>
   </div>
+  <LauncherSetup />
 </template>

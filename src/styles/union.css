@@ -1,0 +1,204 @@
+.union-intro-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: var(--space-6);
+}
+.union-guide h2,
+.union-notice h2,
+.union-security h2 {
+  font-size: var(--text-lg);
+  margin: 0;
+}
+.union-guide,
+.union-notice {
+  gap: var(--space-4);
+}
+.union-notice {
+  border-top: var(--space-1) solid var(--primary);
+}
+.union-security,
+.union-security-current {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.union-security {
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+}
+.union-security-current > svg {
+  color: var(--primary);
+  flex-shrink: 0;
+}
+.union-security-legend {
+  display: grid;
+  gap: var(--space-2);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+}
+.union-security-legend li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.union-profile-card {
+  padding: 0;
+  overflow: hidden;
+}
+.union-profile-heading {
+  padding: var(--space-6);
+  margin: 0;
+  flex-wrap: wrap;
+}
+.union-profile-heading .mono {
+  overflow-wrap: anywhere;
+}
+.union-profile-card > .p-message {
+  margin: 0 var(--space-6) var(--space-6);
+}
+.union-table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+}
+.union-profile-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: var(--text-sm);
+}
+.union-profile-table th,
+.union-profile-table td {
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--line);
+  vertical-align: top;
+}
+.union-profile-table th {
+  color: var(--muted);
+  font-weight: 500;
+}
+.union-profile-table td > small,
+.union-profile-table td > a,
+.union-uuid-cell > span,
+.union-uuid-cell > code {
+  display: block;
+}
+.union-profile-table td > strong {
+  overflow-wrap: anywhere;
+}
+.union-profile-table td > a {
+  overflow-wrap: anywhere;
+  margin-top: var(--space-1);
+}
+.union-current-row {
+  background: var(--soft);
+}
+.union-uuid-cell {
+  min-width: 280px;
+}
+.union-uuid-cell code {
+  overflow-wrap: anywhere;
+}
+.union-uuid-cell > .muted:first-of-type {
+  margin-top: var(--space-2);
+}
+.union-role-labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.union-station-code {
+  font-weight: 600;
+}
+.union-conflicts,
+.union-bind-actions {
+  padding: var(--space-6);
+  border-top: 1px solid var(--line);
+}
+.union-conflicts {
+  gap: var(--space-4);
+}
+.union-conflicts .union-profile-table {
+  min-width: 480px;
+}
+.union-conflicts .union-profile-table th:first-child,
+.union-conflicts .union-profile-table td:first-child {
+  padding-left: 0;
+}
+.union-token-create,
+.union-directory-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.union-token-create {
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.union-directory-card > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.union-station-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: var(--space-12);
+  height: var(--space-12);
+  border-radius: var(--radius-sm);
+  background: var(--soft);
+  color: var(--primary);
+}
+.union-station-icon img {
+  width: var(--space-8);
+  height: var(--space-8);
+  object-fit: contain;
+}
+.union-token-create p {
+  flex: 1;
+  min-width: 220px;
+}
+.union-token-input {
+  display: flex;
+  gap: var(--space-3);
+  min-width: 0;
+}
+.union-token-input input {
+  min-width: 0;
+  flex: 1;
+}
+.launcher-section {
+  margin-top: var(--space-8);
+  scroll-margin-top: var(--space-8);
+}
+.launcher-section .section-heading-copy {
+  display: block;
+}
+.union-conflicts h4 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-base);
+}
+.email-verification-banner {
+  width: min(var(--page-width), calc(100% - var(--space-12)));
+  margin: var(--space-6) auto 0;
+}
+.email-verification-banner .inline-actions {
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+@media (max-width: 768px) {
+  .union-intro-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 640px) {
+  .email-verification-banner {
+    width: calc(100% - var(--space-8));
+  }
+  .union-security-current {
+    flex-wrap: wrap;
+  }
+}

@@ -5,7 +5,7 @@ import { state } from './data/state';
 import { t } from './i18n';
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  scrollBehavior: () => ({ top: 0 }),
+  scrollBehavior: (to) => (to.hash ? { el: to.hash } : { top: 0 }),
   routes: [
     { path: '/', alias: '/home', component: () => import('./pages/HomePage.vue'), meta: { title: t('nav.home') } },
     { path: '/login', component: () => import('./pages/LoginPage.vue'), meta: { title: t('app.signInOrRegister') } },
@@ -18,6 +18,36 @@ export const router = createRouter({
       path: '/account',
       component: () => import('./pages/AccountPage.vue'),
       meta: { title: t('account.title'), auth: true },
+    },
+    { path: '/union', component: () => import('./pages/UnionPage.vue'), meta: { title: t('union.title'), auth: true } },
+    {
+      path: '/launcher',
+      redirect: '/dashboard#launcher',
+    },
+    {
+      path: '/authorizations',
+      component: () => import('./pages/AuthorizationsPage.vue'),
+      meta: { title: t('authorizations.title'), auth: true },
+    },
+    {
+      path: '/activity',
+      component: () => import('./pages/ActivityPage.vue'),
+      meta: { title: t('activity.title'), auth: true },
+    },
+    {
+      path: '/oauth/union/consent',
+      component: () => import('./pages/UnionConsentPage.vue'),
+      meta: { title: t('consent.unionTitle'), auth: true },
+    },
+    {
+      path: '/connect/consent',
+      component: () => import('./pages/ConnectConsentPage.vue'),
+      meta: { title: t('connect.consentTitle'), auth: true },
+    },
+    {
+      path: '/connect/device/verify',
+      component: () => import('./pages/DeviceVerificationPage.vue'),
+      meta: { title: t('connect.deviceTitle'), auth: true },
     },
     {
       path: '/players',
@@ -69,6 +99,21 @@ export const router = createRouter({
       path: '/admin/announcements',
       component: () => import('./pages/admin/AnnouncementsPage.vue'),
       meta: { title: t('nav.announcements'), auth: true, admin: true },
+    },
+    {
+      path: '/admin/union',
+      component: () => import('./pages/admin/UnionPage.vue'),
+      meta: { title: t('adminUnion.title'), auth: true, admin: true },
+    },
+    {
+      path: '/admin/connect',
+      component: () => import('./pages/admin/ConnectPage.vue'),
+      meta: { title: t('adminConnect.title'), auth: true, admin: true },
+    },
+    {
+      path: '/admin/activity',
+      component: () => import('./pages/ActivityPage.vue'),
+      meta: { title: t('activity.adminTitle'), auth: true, admin: true },
     },
     { path: '/Error', component: () => import('./pages/ErrorPage.vue'), meta: { title: t('error.title') } },
     {

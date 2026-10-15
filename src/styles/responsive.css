@@ -29,6 +29,10 @@
   .detail-grid {
     grid-template-columns: 1fr;
   }
+  .collection-grid,
+  .launcher-grid {
+    grid-template-columns: 1fr;
+  }
   .auth-page {
     min-height: auto;
   }
@@ -102,5 +106,10 @@
   }
   .pagination {
     gap: var(--space-3);
+  }
+  .union-status-strip,
+  .authorization-card {
+    align-items: flex-start;
+    flex-wrap: wrap;
   }
 }
