@@ -5,6 +5,7 @@ import type { z } from 'zod';
 import { bindUnionProfile, createBindToken, unbindUnionProfile, type unionDirectorySchema, type unionProfileSchema } from '../api/union';
 import { useOperation } from '../composables/operation';
 import { t } from '../i18n';
+import { state } from '../data/state';
 import UnionProfileTable from './UnionProfileTable.vue';
 
 const props = defineProps<{
@@ -13,6 +14,7 @@ const props = defineProps<{
 }>();
 const emit = defineEmits<{ changed: [] }>();
 const operation = useOperation();
+const canCreateMaster = computed(() => state.account.role === 'Admin');
 const token = ref('');
 const generatedToken = ref('');
 const copyError = ref('');
@@ -73,14 +75,14 @@ async function copyToken(): Promise<void> {
           <div><Button outlined severity="danger" :disabled="operation.pending.value" @click="confirmUnbind = true"><Unlink :size="17" />{{ t('union.unbind') }}</Button></div>
         </template>
         <template v-else>
-          <div class="union-token-create">
+          <div v-if="canCreateMaster" class="union-token-create">
             <p class="muted">{{ t('union.createTokenHint') }}</p>
             <Button outlined :loading="operation.pending.value" :disabled="operation.pending.value" @click="generateToken"><Link2 :size="17" />{{ t('union.createToken') }}</Button>
           </div>
-          <label v-if="generatedToken" class="field">{{ t('union.generatedToken') }}
+          <label v-if="canCreateMaster && generatedToken" class="field">{{ t('union.generatedToken') }}
             <div class="union-token-input"><InputText :model-value="generatedToken" readonly autocomplete="off" /><Button outlined :aria-label="t('common.copy')" @click="copyToken"><Copy :size="17" /></Button></div>
           </label>
-          <Message v-if="copyError" severity="error">{{ copyError }}</Message>
+          <Message v-if="canCreateMaster && copyError" severity="error">{{ copyError }}</Message>
           <Message v-if="isMaster" severity="info">{{ t('union.masterHint') }}</Message>
           <form v-else class="form-stack" @submit.prevent="bind">
             <p class="muted">{{ t('union.enterTokenHint') }}</p>

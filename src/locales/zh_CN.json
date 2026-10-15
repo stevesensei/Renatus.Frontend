@@ -462,6 +462,7 @@
     "union.masterStatus": "当前角色为主角色",
     "union.conflictTitle": "拥有相同名称的其他角色",
     "union.conflictHint": "以下角色尚未与你关联；映射名用于在联盟中区分这些角色。",
+    "union.masterTemporarilyDisabled": "因目前HLJUMC的union对接机制尚有bug，故暂时不允许本站作为主角色站，请绑定到诸如MUA等其他站",
     "union.createTokenHint": "让当前角色成为主角色：生成令牌后，在另一个皮肤站的角色绑定页输入它。令牌有效期为 2 分钟。",
     "union.enterTokenHint": "将当前角色绑定到另一主角色：先在主角色所在的皮肤站获取令牌，再粘贴到下方。",
     "union.generatedToken": "当前角色的绑定令牌",

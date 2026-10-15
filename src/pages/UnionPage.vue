@@ -8,6 +8,7 @@ import UnionDirectoryCard from '../components/UnionDirectoryCard.vue';
 import UnionProfileCard from '../components/UnionProfileCard.vue';
 import { useOperation } from '../composables/operation';
 import { t } from '../i18n';
+import { state } from '../data/state';
 
 const operation = useOperation();
 const profiles = ref<z.infer<typeof unionProfileSchema>[]>([]);
@@ -50,6 +51,7 @@ onMounted(load);
     <Button outlined :loading="operation.pending.value" :disabled="operation.pending.value" @click="load"><RefreshCw :size="17" />{{ t('common.reload') }}</Button>
   </PageHeading>
   <div class="form-stack">
+    <Message v-if="state.account.role !== 'Admin'" severity="warn">{{ t('union.masterTemporarilyDisabled') }}</Message>
     <Message v-if="operation.error.value" severity="error">{{ operation.error.value }}</Message>
     <div class="union-intro-grid">
       <section class="panel form-stack union-guide">
