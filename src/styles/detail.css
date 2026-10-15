@@ -103,6 +103,99 @@
   margin-bottom: var(--space-4);
   font-size: var(--text-base);
 }
+.collection-grid,
+.launcher-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6);
+}
+.union-status-strip,
+.union-status-strip > div,
+.authorization-card,
+.key-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.union-status-strip {
+  justify-content: space-between;
+  margin-bottom: var(--space-8);
+}
+.union-directory {
+  margin-top: var(--space-12);
+}
+.launcher-config {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-4);
+  border: 1px dashed var(--primary);
+  border-radius: var(--radius);
+  background: var(--soft);
+  color: var(--ink);
+  text-align: left;
+}
+.launcher-config span {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+.launcher-config small {
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.setup-steps,
+.scope-list {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding-left: var(--space-6);
+}
+.consent-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+}
+.consent-card,
+.device-form {
+  max-width: 620px;
+  margin: 0 auto;
+}
+.consent-icon,
+.authorization-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  color: var(--primary);
+  background: var(--soft);
+  border-radius: var(--radius);
+}
+.consent-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+.authorization-card > div:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+.scope-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+.union-metrics .panel {
+  display: grid;
+  gap: var(--space-2);
+}
+.union-metrics strong {
+  font-size: var(--text-xl);
+}
+.operation-buttons {
+  flex-wrap: wrap;
+}
 .error-page {
   min-height: 60vh;
   display: flex;

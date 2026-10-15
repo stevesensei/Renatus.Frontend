@@ -2,6 +2,7 @@
 import { t } from '../i18n';
 import {Camera, ShieldCheck} from '@lucide/vue';
 import {reactive, ref} from 'vue';
+import { RouterLink } from 'vue-router';
 import PageHeading from '../components/PageHeading.vue';
 import {PreviewImageError, readAvatar} from '../data/images';
 import {state} from '../data/state';
@@ -56,7 +57,7 @@ async function changePassword(): Promise<void> {
 
 </script>
 <template>
-  <PageHeading :eyebrow="t('account.eyebrow')" :title="t('account.title')" :description="t('account.description')"/>
+  <PageHeading :eyebrow="t('account.eyebrow')" :title="t('account.title')" :description="t('account.description')"><div class="inline-actions"><RouterLink class="button-link secondary" to="/authorizations">{{ t('authorizations.title') }}</RouterLink><RouterLink class="button-link secondary" to="/activity">{{ t('activity.title') }}</RouterLink></div></PageHeading>
   <div class="account-grid">
     <section class="panel profile-summary">
       <Avatar :image="profile.avatar || undefined"
